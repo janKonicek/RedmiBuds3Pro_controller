@@ -1,0 +1,5 @@
+# No MSVC build tools on this machine: use the self-contained GNU host toolchain
+# (it ships its own MinGW linker), so build scripts and the app link without Visual Studio.
+[toolchain]
+channel = "stable-x86_64-pc-windows-gnu"
+profile = "minimal"

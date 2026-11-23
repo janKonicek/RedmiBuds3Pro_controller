@@ -1,0 +1,15 @@
+# Build output
+/target
+
+# Logs
+*.log
+*.log.1
+
+# Editor / OS junk
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini

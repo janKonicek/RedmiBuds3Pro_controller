@@ -1,0 +1,75 @@
+[package]
+name = "redmibuds"
+version = "0.1.0"
+edition = "2024"
+license = "AGPL-3.0-or-later"
+description = "Control protocol for Xiaomi Redmi Buds (3 Pro) over Bluetooth RFCOMM, ported from Gadgetbridge"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "probe"
+path = "src/bin/probe.rs"
+
+[[bin]]
+name = "anc_check"
+path = "src/bin/anc_check.rs"
+
+[[bin]]
+name = "apply_check"
+path = "src/bin/apply_check.rs"
+
+[[bin]]
+name = "redmibuds-tray"
+path = "src/bin/tray/main.rs"
+
+[features]
+# Offscreen renderer for the README screenshots (docs/*.png); not in normal builds:
+# cargo run --release --features render-docs --bin redmibuds-tray -- --render-docs docs
+render-docs = ["windows/Win32_Graphics_Imaging", "windows/Win32_System_Com", "windows/Win32_System_Com_StructuredStorage"]
+
+[dependencies]
+
+[target.'cfg(windows)'.dependencies]
+# Pinned to 0.58: it links via prebuilt import libs (windows-targets 0.52).
+# windows >= 0.59 uses raw-dylib, which on the GNU toolchain needs a full
+# MinGW binutils (dlltool + as) that Rust does not ship.
+windows = { version = "0.58", features = [
+    "Foundation",
+    "Foundation_Collections",
+    "Foundation_Numerics",
+    "Devices_Bluetooth",
+    "Devices_Bluetooth_Rfcomm",
+    "Devices_Enumeration",
+    "Networking",
+    "Networking_Sockets",
+    "Storage_Streams",
+    "Win32_Networking_WinSock",
+    "Win32_Devices_Bluetooth",
+    # tray app
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_Shell",
+    "Win32_UI_HiDpi",
+    "Win32_Graphics_Gdi",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Registry",
+    "Win32_System_Threading",
+    "Win32_System_SystemInformation",
+    "Win32_Security",
+    "Win32_Graphics_Dwm",
+    "Win32_Graphics_Direct2D",
+    "Win32_Graphics_Direct2D_Common",
+    "Win32_Graphics_DirectWrite",
+    "Win32_Graphics_Dxgi_Common",
+    "Win32_UI_Input_KeyboardAndMouse",
+] }
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
